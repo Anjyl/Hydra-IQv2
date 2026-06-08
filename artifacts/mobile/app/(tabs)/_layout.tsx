@@ -4,10 +4,60 @@ import { Tabs } from "expo-router";
 import { Icon, Label, NativeTabs } from "expo-router/unstable-native-tabs";
 import { SymbolView } from "expo-symbols";
 import { Feather } from "@expo/vector-icons";
-import React from "react";
+import React, { useEffect } from "react";
 import { Platform, StyleSheet, View, useColorScheme } from "react-native";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSequence,
+  withSpring,
+} from "react-native-reanimated";
 
 import { useColors } from "@/hooks/useColors";
+
+// ─── Animated tab icon — springs on focus ──────────────────────────────────────
+function AnimatedTabIcon({
+  featherName,
+  sfName,
+  sfNameSelected,
+  color,
+  focused,
+  isIOS,
+}: {
+  featherName: string;
+  sfName: string;
+  sfNameSelected: string;
+  color: string;
+  focused: boolean;
+  isIOS: boolean;
+}) {
+  const scale = useSharedValue(1);
+
+  useEffect(() => {
+    if (focused) {
+      scale.value = withSequence(
+        withSpring(1.28, { damping: 3, stiffness: 280 }),
+        withSpring(1.0,  { damping: 10, stiffness: 200 }),
+      );
+    } else {
+      scale.value = withSpring(1.0, { damping: 12, stiffness: 180 });
+    }
+  }, [focused]);
+
+  const animStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  return (
+    <Animated.View style={animStyle}>
+      {isIOS ? (
+        <SymbolView name={focused ? sfNameSelected : sfName} tintColor={color} size={24} />
+      ) : (
+        <Feather name={featherName as "home"} size={22} color={color} />
+      )}
+    </Animated.View>
+  );
+}
 
 function NativeTabLayout() {
   return (
@@ -39,6 +89,13 @@ function ClassicTabLayout() {
   const isIOS = Platform.OS === "ios";
   const isWeb = Platform.OS === "web";
 
+  const tabs = [
+    { name: "index",    title: "Dashboard", feather: "home",     sfDefault: "house",          sfSelected: "house.fill"      },
+    { name: "search",   title: "Search",    feather: "search",   sfDefault: "magnifyingglass", sfSelected: "magnifyingglass" },
+    { name: "identify", title: "Identify",  feather: "camera",   sfDefault: "camera",          sfSelected: "camera.fill"     },
+    { name: "admin",    title: "Admin",     feather: "settings", sfDefault: "gearshape",       sfSelected: "gearshape.fill"  },
+  ];
+
   return (
     <Tabs
       screenOptions={{
@@ -69,54 +126,25 @@ function ClassicTabLayout() {
         },
       }}
     >
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: "Dashboard",
-          tabBarIcon: ({ color }) =>
-            isIOS ? (
-              <SymbolView name="house" tintColor={color} size={24} />
-            ) : (
-              <Feather name="home" size={22} color={color} />
+      {tabs.map(tab => (
+        <Tabs.Screen
+          key={tab.name}
+          name={tab.name}
+          options={{
+            title: tab.title,
+            tabBarIcon: ({ color, focused }) => (
+              <AnimatedTabIcon
+                featherName={tab.feather}
+                sfName={tab.sfDefault}
+                sfNameSelected={tab.sfSelected}
+                color={color}
+                focused={focused}
+                isIOS={isIOS}
+              />
             ),
-        }}
-      />
-      <Tabs.Screen
-        name="search"
-        options={{
-          title: "Search",
-          tabBarIcon: ({ color }) =>
-            isIOS ? (
-              <SymbolView name="magnifyingglass" tintColor={color} size={24} />
-            ) : (
-              <Feather name="search" size={22} color={color} />
-            ),
-        }}
-      />
-      <Tabs.Screen
-        name="identify"
-        options={{
-          title: "Identify",
-          tabBarIcon: ({ color }) =>
-            isIOS ? (
-              <SymbolView name="camera" tintColor={color} size={24} />
-            ) : (
-              <Feather name="camera" size={22} color={color} />
-            ),
-        }}
-      />
-      <Tabs.Screen
-        name="admin"
-        options={{
-          title: "Admin",
-          tabBarIcon: ({ color }) =>
-            isIOS ? (
-              <SymbolView name="gearshape" tintColor={color} size={24} />
-            ) : (
-              <Feather name="settings" size={22} color={color} />
-            ),
-        }}
-      />
+          }}
+        />
+      ))}
     </Tabs>
   );
 }
