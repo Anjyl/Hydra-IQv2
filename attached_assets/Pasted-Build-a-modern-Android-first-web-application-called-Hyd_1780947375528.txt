@@ -1,0 +1,123 @@
+Build a modern Android-first web application called "Hydra IQ".
+Purpose: Allow technicians and hydraulic sales staff to identify hydraulic pumps, browse catalog data, search by specifications, and prepare for future AI image recognition.
+Tech Stack:
+React
+TypeScript
+TailwindCSS
+Supabase database
+Mobile-first responsive design
+Material Icons
+Core Features:
+Dashboard
+Search bar
+Recently viewed pumps
+Quick access buttons
+Modern industrial design theme
+Pump Database Each pump record contains:
+Manufacturer
+Series
+Model Number
+Product Description
+Pump Image
+Technical Drawing Image
+Exploded Diagram Image
+Shaft Type
+Shaft Diameter
+Mounting Type
+Port Size
+Displacement
+Pressure Rating
+Notes
+Search System Allow searching by:
+Manufacturer
+Series
+Model Number
+Shaft Type
+Port Size
+Displacement
+Display matching pumps as cards.
+Pump Details Screen Display:
+Product Image
+Technical Drawing
+Exploded Diagram
+Full Specifications
+Associated Components
+Tabs:
+Overview
+Specifications
+Components
+Drawings
+Component Lookup Each pump contains components.
+Example:
+Pump Series 250
+Components:
+Housing
+Shaft
+Drive Gear
+Idler Gear
+Bushing
+Seal Kit
+Selecting a component displays:
+Component Name
+Part Number
+Description
+Image
+Quantity Required
+Future AI Recognition Placeholder Create a page called:
+"Identify Pump"
+Include:
+Camera Upload Button
+Image Upload Area
+For now:
+Store uploaded image
+Display: "AI Recognition Coming Soon"
+Structure code so image recognition can be added later.
+Admin Panel Allow adding:
+Manufacturers
+Pump Models
+Components
+Images
+Technical Drawings
+Admin can edit and delete records.
+Database Schema
+Manufacturers
+id
+name
+PumpSeries
+id
+manufacturerId
+seriesName
+PumpModels
+id
+seriesId
+modelNumber
+description
+imageUrl
+drawingUrl
+explodedViewUrl
+shaftType
+shaftDiameter
+mountingType
+portSize
+displacement
+pressureRating
+Components
+id
+pumpModelId
+name
+partNumber
+description
+imageUrl
+quantity
+Design Requirements
+Dark industrial theme
+Hydraulic blue accent colors
+Mobile optimized
+Clean card layout
+Fast search
+Modern UI similar to professional industrial software
+Bonus Feature Create a PDF import utility page that allows future extraction of:
+Model Numbers
+Images
+Specifications from hydraulic manufacturer catalogs.
+Generate complete working code and project structure.
