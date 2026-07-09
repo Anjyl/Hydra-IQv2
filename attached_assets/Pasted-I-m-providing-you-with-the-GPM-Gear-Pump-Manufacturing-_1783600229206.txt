@@ -1,0 +1,31 @@
+I'm providing you with the GPM (Gear Pump Manufacturing) Complete Catalogue PDF. Build a web app that structures and presents this data with 100% accuracy — no summarizing, rounding, or approximating any number, code, or part reference. Every table value must match the source PDF exactly.
+1. Data extraction rules
+Extract every table verbatim: Parts Lists A–D, E–J, J–S, V–W, Fasteners, Pump & Motor Specifications (Bearing Range + Bushing Range), Pump & Motor Dimensions, Pump Builder (Steps 1–16), all Series pages (110/112, 120, 125, 131, 151, 176, 215, 230, 250, 265), Pump Identification, Porting (Bearing + Bushing suitability + Port Identification), Torque Settings (Bearing + Bushing), PTO Truck Pumps, PTO Gear Pump Range, Dump Pumps.
+Preserve exact codes (e.g. ADD-131-??, AAU-131-07 gs), factory numbers, part numbers, and reference numbers as separate fields — do not merge or reformat them.
+Keep units exactly as given (bar, psi, rpm, kg, cc/rev, Lpm, cu in, US gpm) — don't convert unless the app explicitly offers a converter (use the "Useful Formulae" table from the PDF for that).
+Where a cell is blank in the source, leave it blank/null — do not infer a value.
+2. App structure — mirror the PDF's own sections
+Company Profile
+Features (Pumps & Motors, PL Factor tables for Bearing/Bushing)
+Quick Reference (searchable Parts List A–S, V–W, Fasteners)
+Pump & Motor Specifications (Bearing Range + Bushing Range, by dash code -05 to -30)
+Pump & Motor Dimensions (Single/Double/Triple, tables by series)
+Pump Builder (interactive step-by-step part number builder, Steps 1–16, exactly matching the drop-down options and code letters shown)
+Series pages (one page/view per series: 110/112, 120, 125, 131, 151, 176, 215, 230, 250, 265) each with its own component code table (A–X as applicable)
+Pump Identification (see section 3 below)
+Porting (Bearing Pump Porting Suitability + Bushing Pump Porting Suitability + Port Identification table with thread types)
+Torque Settings (Bearing Range + Bushing Range)
+PTO Truck Pumps, PTO Gear Pump Range, Dump Pumps
+3. Pump Identification tool — build this as a proper interactive feature, all measurements in millimeters (mm)
+Recreate the "Pump Identification" page (p.55) as a working tool, not just a static table:
+External – Port End Cover View: let the user select a series (120, 131, 125, 151, 176, 215, 230, 250, 265) and display the corresponding A/B dimensions in mm from the table, plus the diagram orientation (bolt circle view).
+External – Shaft End Cover View: Shaft Bearing OD (mm) and whether it has a screw-in retainer, per series.
+Internal: Dowel Pins present (X), Gear Diameter (mm), Roller Bearing OD/ID (mm), Bush OD/ID (mm) — per series.
+Rotation determination: implement the CW/CCW logic exactly as shown — viewing the shaft end cover with drive shaft at top, port position determines rotation (pressure port left = CCW, pressure port right = CW).
+Build this as a "reverse lookup": user inputs measured mm values (e.g. measured shaft bearing OD, gear diameter) and the app suggests the matching series, the same way a technician would identify an unknown pump in the field.
+Also let the user browse forward: pick a series → see all its mm dimensions across the three sub-tables at once.
+4. Validation
+Cross-check every extracted number against the PDF twice before final build.
+Flag any ambiguous/illegible OCR values instead of guessing (e.g. rows marked "SPECIAL" or blank factory numbers should stay marked as-is).
+Include a "source page reference" field per data table so entries can be traced back to the catalogue page number.
+Do not skip any series, table, or section — completeness and accuracy matter more than speed.
