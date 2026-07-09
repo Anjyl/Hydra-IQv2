@@ -235,10 +235,12 @@ export default function DashboardScreen() {
   ];
 
   const actions = [
-    { icon: "search",    label: "Search Pumps",  onPress: () => router.push("/(tabs)/search")   },
-    { icon: "camera",    label: "Identify Pump", onPress: () => router.push("/(tabs)/identify") },
-    { icon: "file-text", label: "PDF Import",    onPress: () => router.push("/pdf-import")      },
-    { icon: "settings",  label: "Admin Panel",   onPress: () => router.push("/(tabs)/admin")    },
+    { icon: "search",    label: "Search Pumps",  onPress: () => router.push("/(tabs)/search")        },
+    { icon: "activity",  label: "Identify Pump", onPress: () => router.push("/(tabs)/identify")      },
+    { icon: "tool",      label: "Pump Builder",  onPress: () => router.push("/pump-builder" as any)  },
+    { icon: "list",      label: "Parts Ref",     onPress: () => router.push("/parts-reference" as any) },
+    { icon: "file-text", label: "PDF Import",    onPress: () => router.push("/pdf-import")           },
+    { icon: "settings",  label: "Admin Panel",   onPress: () => router.push("/(tabs)/admin")         },
   ];
 
   return (

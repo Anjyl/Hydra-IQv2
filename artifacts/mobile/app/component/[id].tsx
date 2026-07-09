@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { useData } from "@/contexts/DataContext";
+import { getGpmNo, useData } from "@/contexts/DataContext";
 import { useColors } from "@/hooks/useColors";
 
 export default function ComponentDetailScreen() {
@@ -41,7 +41,7 @@ export default function ComponentDetailScreen() {
         </TouchableOpacity>
         <View style={styles.headerTitle}>
           <Text style={[styles.headerName, { color: colors.foreground }]} numberOfLines={1}>{component.name}</Text>
-          <Text style={[styles.headerPN, { color: colors.primary }]} numberOfLines={1}>{component.partNumber}</Text>
+          <Text style={[styles.headerPN, { color: colors.primary }]} numberOfLines={1}>GPM: {getGpmNo(component)}</Text>
         </View>
       </View>
 
@@ -59,15 +59,48 @@ export default function ComponentDetailScreen() {
 
         {/* Details */}
         <View style={[styles.detailCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
+          {/* GPM Unique No. — PRIMARY */}
+          <View style={styles.row}>
+            <Text style={[styles.rowLabel, { color: colors.mutedForeground }]}>GPM Unique No.</Text>
+            <Text style={[styles.gpmNoValue, { color: colors.primary }]}>{getGpmNo(component)}</Text>
+          </View>
+          {/* Secondary cross-refs — only shown when present */}
+          {component.factoryNo ? (
+            <>
+              <View style={[styles.divider, { backgroundColor: colors.border }]} />
+              <View style={styles.row}>
+                <Text style={[styles.rowLabel, { color: colors.mutedForeground }]}>Factory No. (cross-ref)</Text>
+                <Text style={[styles.rowValue, { color: colors.foreground }]}>{component.factoryNo}</Text>
+              </View>
+            </>
+          ) : null}
+          {component.partNo ? (
+            <>
+              <View style={[styles.divider, { backgroundColor: colors.border }]} />
+              <View style={styles.row}>
+                <Text style={[styles.rowLabel, { color: colors.mutedForeground }]}>Part No. (cross-ref)</Text>
+                <Text style={[styles.rowValue, { color: colors.foreground }]}>{component.partNo}</Text>
+              </View>
+            </>
+          ) : null}
+          {component.reference ? (
+            <>
+              <View style={[styles.divider, { backgroundColor: colors.border }]} />
+              <View style={styles.row}>
+                <Text style={[styles.rowLabel, { color: colors.mutedForeground }]}>Reference</Text>
+                <Text style={[styles.rowValue, { color: colors.foreground }]}>{component.reference}</Text>
+              </View>
+            </>
+          ) : null}
+          <View style={[styles.divider, { backgroundColor: colors.border }]} />
           {[
-            { label: "Part Number", value: component.partNumber },
-            { label: "Category", value: component.category },
+            { label: "Category",          value: component.category },
             { label: "Quantity Required", value: `× ${component.quantity}` },
-            { label: "For Model", value: model?.modelNumber ?? "—" },
-            { label: "Series", value: series ? `Series ${series.seriesName}` : "—" },
-            { label: "Manufacturer", value: mfr?.name ?? "—" },
+            { label: "For Model",         value: model?.modelNumber ?? "—" },
+            { label: "Series",            value: series ? `Series ${series.seriesName}` : "—" },
+            { label: "Manufacturer",      value: mfr?.name ?? "—" },
           ].map((row, i, arr) => (
-            <View key={i}>
+            <View key={row.label}>
               <View style={styles.row}>
                 <Text style={[styles.rowLabel, { color: colors.mutedForeground }]}>{row.label}</Text>
                 <Text style={[styles.rowValue, { color: colors.foreground }]}>{row.value}</Text>
@@ -178,6 +211,13 @@ const styles = StyleSheet.create({
     fontFamily: "Inter_600SemiBold",
     flex: 1,
     textAlign: "right",
+  },
+  gpmNoValue: {
+    fontSize: 13,
+    fontFamily: "Inter_700Bold",
+    flex: 1,
+    textAlign: "right",
+    letterSpacing: 0.3,
   },
   divider: { height: StyleSheet.hairlineWidth, marginHorizontal: 14 },
   descCard: {

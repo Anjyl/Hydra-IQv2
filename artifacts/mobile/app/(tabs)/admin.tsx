@@ -154,7 +154,7 @@ export default function AdminScreen() {
               </View>
               <View style={styles.itemInfo}>
                 <Text style={[styles.itemTitle, { color: colors.foreground }]}>{item.name}</Text>
-                <Text style={[styles.itemSub, { color: colors.mutedForeground }]}>{item.partNumber} · {model?.modelNumber}</Text>
+                <Text style={[styles.itemSub, { color: colors.mutedForeground }]}>GPM: {item.gpmUniqueNo ?? item.partNumber} · {model?.modelNumber}</Text>
               </View>
               <TouchableOpacity
                 onPress={() => confirmDelete(item.name, () => deleteComponent(item.id))}

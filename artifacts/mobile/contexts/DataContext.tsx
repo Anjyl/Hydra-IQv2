@@ -47,10 +47,26 @@ export interface Component {
   pumpModelId: string;
   category: string;
   name: string;
-  partNumber: string;
+  /** PRIMARY authoritative identifier — GPM Unique No. (e.g. "KY-131", "LUB-120-239").
+   *  All search, display, and BOM must key off this first.
+   *  Where blank or marked "SPECIAL" in the source, preserve exactly — do not substitute. */
+  partNumber: string;          // stores the GPM Unique No.; kept as partNumber for storage compat
+  gpmUniqueNo?: string;        // explicit override when GPM no. differs from stored partNumber
+  /** Factory / OEM cross-reference — secondary, never used as primary key */
+  factoryNo?: string;
+  /** Supplier/third-party part number — secondary cross-reference only */
+  partNo?: string;
+  /** Catalogue source reference note */
+  reference?: string;
   description: string;
   imageUrl?: string;
   quantity: number;
+}
+
+/** Always use this to get the authoritative GPM Unique No. for display, search, and BOM.
+ *  Falls back to partNumber (which IS the GPM unique no. for all seeded data). */
+export function getGpmNo(c: Pick<Component, "gpmUniqueNo" | "partNumber">): string {
+  return c.gpmUniqueNo ?? c.partNumber;
 }
 
 interface DataContextType {
@@ -80,6 +96,10 @@ interface DataContextType {
   getManufacturer: (id: string) => Manufacturer | undefined;
   getComponent: (id: string) => Component | undefined;
   searchPumps: (query: string, filters: SearchFilters) => PumpModel[];
+  /** Search components by GPM Unique No. (primary), name, or description.
+   *  Factory No. / Part No. / Reference are also searched as cross-refs,
+   *  but results always surface the gpmUniqueNo as the definitive identifier. */
+  searchComponents: (query: string) => Component[];
 }
 
 export interface SearchFilters {
@@ -400,6 +420,23 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   const getManufacturer          = useCallback((id: string)  => manufacturers.find(m => m.id === id),              [manufacturers]);
   const getComponent             = useCallback((id: string)  => components.find(c => c.id === id),                 [components]);
 
+  const searchComponents = useCallback((query: string): Component[] => {
+    const q = query.toLowerCase().trim();
+    if (!q) return [];
+    return components.filter(c => {
+      const gpmNo = getGpmNo(c).toLowerCase();
+      return (
+        gpmNo.includes(q) ||
+        c.name.toLowerCase().includes(q) ||
+        c.description.toLowerCase().includes(q) ||
+        c.category.toLowerCase().includes(q) ||
+        (c.factoryNo ?? "").toLowerCase().includes(q) ||
+        (c.partNo ?? "").toLowerCase().includes(q) ||
+        (c.reference ?? "").toLowerCase().includes(q)
+      );
+    });
+  }, [components]);
+
   const searchPumps = useCallback((query: string, filters: SearchFilters): PumpModel[] => {
     const q = query.toLowerCase().trim();
     return pumpModels.filter(model => {
@@ -428,7 +465,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       addPumpModel,    updatePumpModel,    deletePumpModel,
       addComponent,    updateComponent,    deleteComponent,
       markViewed, getSeriesForManufacturer, getModelsForSeries,
-      getComponentsForModel, getModel, getSeries, getManufacturer, getComponent, searchPumps,
+      getComponentsForModel, getModel, getSeries, getManufacturer, getComponent, searchPumps, searchComponents,
     }}>
       {children}
     </DataContext.Provider>

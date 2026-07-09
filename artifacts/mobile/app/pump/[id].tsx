@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { Component, useData } from "@/contexts/DataContext";
+import { getGpmNo, useData } from "@/contexts/DataContext";
 import { useColors } from "@/hooks/useColors";
 
 type Tab = "overview" | "specs" | "components" | "drawings";
@@ -180,7 +180,17 @@ export default function PumpDetailScreen() {
                       >
                         <View style={styles.compInfo}>
                           <Text style={[styles.compName, { color: colors.foreground }]}>{comp.name}</Text>
-                          <Text style={[styles.compPN, { color: colors.primary }]}>{comp.partNumber}</Text>
+                          {/* GPM Unique No. — authoritative part number (primary display) */}
+                          <Text style={[styles.compPN, { color: colors.primary }]}>
+                            GPM: {getGpmNo(comp)}
+                          </Text>
+                          {/* Secondary cross-refs — shown only when present */}
+                          {comp.factoryNo ? (
+                            <Text style={[styles.compXRef, { color: colors.mutedForeground }]}>Factory: {comp.factoryNo}</Text>
+                          ) : null}
+                          {comp.partNo ? (
+                            <Text style={[styles.compXRef, { color: colors.mutedForeground }]}>Part No: {comp.partNo}</Text>
+                          ) : null}
                         </View>
                         <View style={styles.compRight}>
                           <View style={[styles.qtyBadge, { backgroundColor: colors.secondary }]}>
@@ -407,8 +417,13 @@ const styles = StyleSheet.create({
   },
   compPN: {
     fontSize: 12,
-    fontFamily: "Inter_400Regular",
+    fontFamily: "Inter_700Bold",
     marginTop: 2,
+  },
+  compXRef: {
+    fontSize: 11,
+    fontFamily: "Inter_400Regular",
+    marginTop: 1,
   },
   compRight: {
     flexDirection: "row",
