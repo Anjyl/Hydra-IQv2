@@ -52,12 +52,6 @@ export interface Component {
    *  Where blank or marked "SPECIAL" in the source, preserve exactly — do not substitute. */
   partNumber: string;          // stores the GPM Unique No.; kept as partNumber for storage compat
   gpmUniqueNo?: string;        // explicit override when GPM no. differs from stored partNumber
-  /** Factory / OEM cross-reference — secondary, never used as primary key */
-  factoryNo?: string;
-  /** Supplier/third-party part number — secondary cross-reference only */
-  partNo?: string;
-  /** Catalogue source reference note */
-  reference?: string;
   description: string;
   imageUrl?: string;
   quantity: number;
@@ -430,9 +424,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
         c.name.toLowerCase().includes(q) ||
         c.description.toLowerCase().includes(q) ||
         c.category.toLowerCase().includes(q) ||
-        (c.factoryNo ?? "").toLowerCase().includes(q) ||
-        (c.partNo ?? "").toLowerCase().includes(q) ||
-        (c.reference ?? "").toLowerCase().includes(q)
+        false
       );
     });
   }, [components]);

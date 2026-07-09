@@ -184,13 +184,6 @@ export default function PumpDetailScreen() {
                           <Text style={[styles.compPN, { color: colors.primary }]}>
                             GPM: {getGpmNo(comp)}
                           </Text>
-                          {/* Secondary cross-refs — shown only when present */}
-                          {comp.factoryNo ? (
-                            <Text style={[styles.compXRef, { color: colors.mutedForeground }]}>Factory: {comp.factoryNo}</Text>
-                          ) : null}
-                          {comp.partNo ? (
-                            <Text style={[styles.compXRef, { color: colors.mutedForeground }]}>Part No: {comp.partNo}</Text>
-                          ) : null}
                         </View>
                         <View style={styles.compRight}>
                           <View style={[styles.qtyBadge, { backgroundColor: colors.secondary }]}>
