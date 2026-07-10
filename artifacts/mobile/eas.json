@@ -15,13 +15,17 @@
       "node": "20.17.0",
       "pnpm": "10.26.1",
       "android": {
-        "buildType": "apk"
+        "buildType": "apk",
+        "image": "ubuntu-22.04-jdk-17-ndk-r27"
       }
     },
     "production": {
       "autoIncrement": true,
       "node": "20.17.0",
-      "pnpm": "10.26.1"
+      "pnpm": "10.26.1",
+      "android": {
+        "image": "ubuntu-22.04-jdk-17-ndk-r27"
+      }
     }
   },
   "submit": {
