@@ -146,6 +146,21 @@ const CONFIDENCE_COLOR: Record<string, string> = {
 
 // ── Helpers ──────────────────────────────────────────────────────────
 async function toBase64(uri: string): Promise<{ base64: string; mimeType: string }> {
+  if (Platform.OS === "web") {
+    const response = await fetch(uri);
+    const blob = await response.blob();
+    const mimeType = blob.type || "image/jpeg";
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const dataUrl = reader.result as string;
+        const base64 = dataUrl.split(",")[1];
+        resolve({ base64, mimeType });
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  }
   const base64 = await FileSystem.readAsStringAsync(uri, { encoding: FileSystem.EncodingType.Base64 });
   const ext = uri.split(".").pop()?.toLowerCase() ?? "jpg";
   const mimeMap: Record<string, string> = { jpg: "image/jpeg", jpeg: "image/jpeg", png: "image/png", webp: "image/webp" };
