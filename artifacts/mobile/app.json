@@ -1,11 +1,12 @@
 {
   "expo": {
     "name": "Hydra IQ",
-    "slug": "mobile",
+    "slug": "hydra-iq",
+    "owner": "anjyls-organization",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "mobile",
+    "scheme": "hydraiQ",
     "userInterfaceStyle": "dark",
     "newArchEnabled": true,
     "splash": {
@@ -14,10 +15,16 @@
       "backgroundColor": "#0f1117"
     },
     "ios": {
-      "supportsTablet": false
+      "supportsTablet": false,
+      "bundleIdentifier": "com.anjyl.hydraiQ"
     },
     "android": {
-      "backgroundColor": "#0f1117"
+      "backgroundColor": "#0f1117",
+      "package": "com.anjyl.hydraiQ",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/icon.png",
+        "backgroundColor": "#0f1117"
+      }
     },
     "web": {
       "favicon": "./assets/images/icon.png"
@@ -31,11 +38,17 @@
       ],
       "expo-font",
       "expo-web-browser",
-      "expo-image-picker"
+      "expo-image-picker",
+      "expo-file-system"
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "2e387883-e464-49f9-ac7f-2848a38c8424"
+      }
     }
   }
 }
